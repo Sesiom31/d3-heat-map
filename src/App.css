@@ -1,0 +1,57 @@
+main{
+  position: relative;
+}
+
+
+.container{
+  width: 1900px;
+  height: 800px;
+  position: relative;
+  padding-top: 5rem;
+  display: flex;
+  justify-content: center;
+}
+
+header{
+  height: 5rem;
+  display:  flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: rgb(137, 24, 24);
+}
+header h1{
+  font-size: 2rem;
+}
+
+header span{
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+#tooltip{
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.669);
+  top: 0;
+  left: 0;
+  width: 9rem;
+  height: 4.5rem;
+  border-radius: 0.4rem;
+  color: #fff;
+  padding: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.b{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
