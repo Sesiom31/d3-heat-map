@@ -35,7 +35,7 @@ function Svg({ data, baseTemperatura }) {
     .padding(0);
 
   const colorScale = d3
-    .scaleQuantile()
+    .scaleQuantize()
     .domain(d3.extent(data, (d) => baseTemperatura + d.variance))
     .range(legendColors);
 
@@ -46,7 +46,7 @@ function Svg({ data, baseTemperatura }) {
       .enter()
       .append('rect')
       .attr('class', 'cell')
-      .attr('data-month', (d) => d.month)
+      .attr('data-month', (d) => d.month-1)
       .attr('data-year', (d) => d.year)
       .attr('data-temp', (d) => baseTemperatura + d.variance)
       .attr('width', xScale.bandwidth())
