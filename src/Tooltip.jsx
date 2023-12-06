@@ -2,8 +2,6 @@ import { months } from './datos';
 import PropTypes from 'prop-types';
 
 function Tooltip({ datosTooltip: { x, y, year, month, temperatura, variance }, tooltipIsActive }) {
-  
-
   return (
     <div
       id="tooltip"
@@ -24,7 +22,7 @@ function Tooltip({ datosTooltip: { x, y, year, month, temperatura, variance }, t
 
 Tooltip.propTypes = {
   datosTooltip: PropTypes.object,
-  tooltipIsActive: PropTypes.bool
+  tooltipIsActive: PropTypes.bool,
 };
 
 export default Tooltip;

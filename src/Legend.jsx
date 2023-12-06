@@ -3,31 +3,12 @@ import { useEffect, useRef } from 'react';
 import { h, pb, pl } from './datos';
 import PropTypes from 'prop-types';
 
-function Legend({ data, baseTemperatura, legendColors }) {
+function Legend({colors, colorScale, minT, maxT }) {
   const legendRef = useRef(null);
   const colorLegendRef = useRef(null);
   const legendWidth = 440;
   const legendHeight = 25;
-
-  const variance = data.map((d) => d.variance); // array de variaciones en Temperatura
-  const [minT = 0, maxT = 0] = d3.extent(variance, (d) => baseTemperatura + d);
-  // calcula el minimo y maximo de las variaciones en Temperatura + baseTemperatura
-
-  const legendScale = d3
-    .scaleThreshold()
-    .domain(
-      ((min, max, count) => {
-        let array = [];
-        let step = (max - min) / count;
-        let base = min;
-        for (let i = 1; i < count; i++) {
-          array.push(base + i * step);
-        }
-        return array;
-      })(minT, maxT, legendColors.length)
-    )
-    .range(legendColors);
-
+ 
   const legendX = d3
     .scaleLinear()
     .domain([minT, maxT])
@@ -35,22 +16,22 @@ function Legend({ data, baseTemperatura, legendColors }) {
 
   useEffect(() => {
     d3.select(legendRef.current).call(
-      d3.axisBottom(legendX).tickValues(legendScale.domain()).tickFormat(d3.format('.1f'))
+      d3.axisBottom(legendX).tickValues(colorScale.domain()).tickFormat(d3.format('.1f'))
     );
-  }, [legendX, legendScale]);
+  }, [legendX, colorScale]);
 
   useEffect(() => {
     d3.select(colorLegendRef.current)
       .selectAll('rect')
-      .data(legendColors)
+      .data(colors)
       .enter()
       .append('rect')
-      .attr('width', legendWidth / legendColors.length)
+      .attr('width', legendWidth / colors.length)
       .attr('height', legendHeight)
-      .attr('x', (d, i) => pl + (legendWidth * i) / legendColors.length)
+      .attr('x', (d, i) => pl + (legendWidth * i) / colors.length)
       .attr('y', h - pb / 2)
       .attr('fill', (d) => d);
-  }, [legendColors, legendX, legendScale]);
+  }, [colors, legendX, colorScale]);
 
   return (
     <>
@@ -63,7 +44,10 @@ function Legend({ data, baseTemperatura, legendColors }) {
 Legend.propTypes = {
   data: PropTypes.array,
   baseTemperatura: PropTypes.number.isRequired,
-  legendColors: PropTypes.array,
+  colors: PropTypes.array,
+  colorScale:PropTypes.func,
+  minT: PropTypes.number,
+  maxT: PropTypes.number,
 };
 
 export default Legend;

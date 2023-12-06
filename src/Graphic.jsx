@@ -28,11 +28,6 @@ function Graphic() {
 
   const [minYear, maxYear] = [d3.min(data, (d) => d.year), d3.max(data, (d) => d.year)];
 
-  setTimeout(() => {
-    const rect = document.querySelectorAll('.cell')
-
-    console.log(rect.length)
-  }, 3000);
 
   return (
     <>

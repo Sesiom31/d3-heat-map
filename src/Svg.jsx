@@ -18,9 +18,11 @@ function Svg({ data, baseTemperatura }) {
   });
   const svgRef = useRef(null);
 
-  console.log(data)
+  
 
-  const legendColors = d3.schemeRdBu[11].reverse(); // array de colores para la leyenda
+  const colors = d3.schemeRdBu[11].reverse(); // array de colores para la leyenda
+  const variance = data.map((d) => d.variance); // array de variaciones en Temperatura
+  const [minT = 0, maxT = 0] = d3.extent(variance, (d) => baseTemperatura + d);
 
   const xScale = d3
     .scaleBand()
@@ -35,9 +37,19 @@ function Svg({ data, baseTemperatura }) {
     .padding(0);
 
   const colorScale = d3
-    .scaleQuantize()
-    .domain(d3.extent(data, (d) => baseTemperatura + d.variance))
-    .range(legendColors);
+    .scaleThreshold()
+    .domain(
+      ((min, max, count) => {
+        let dom = [];
+        let step = (max - min) / count;
+        let base = min;
+        for (let i = 1; i < count; i++) {
+          dom.push(base + i * step);
+        }
+        return dom;
+      })(minT, maxT, colors.length)
+    )
+    .range(colors);
 
   useEffect(() => {
     d3.select(svgRef.current)
@@ -46,7 +58,7 @@ function Svg({ data, baseTemperatura }) {
       .enter()
       .append('rect')
       .attr('class', 'cell')
-      .attr('data-month', (d) => d.month-1)
+      .attr('data-month', (d) => d.month - 1)
       .attr('data-year', (d) => d.year)
       .attr('data-temp', (d) => baseTemperatura + d.variance)
       .attr('width', xScale.bandwidth())
@@ -54,7 +66,6 @@ function Svg({ data, baseTemperatura }) {
       .attr('x', (d) => xScale(d.year))
       .attr('y', (d) => yScale(d.month))
       .attr('fill', (d) => colorScale(baseTemperatura + d.variance))
-
       .style('cursor', 'pointer')
       .on('mouseenter', (e, d) => {
         setTooltipIsActive(true);
@@ -76,7 +87,14 @@ function Svg({ data, baseTemperatura }) {
     <main>
       <svg width={w} height={h} ref={svgRef}>
         <Ejes data={data} xScale={xScale} yScale={yScale} />
-        <Legend data={data} baseTemperatura={baseTemperatura} legendColors={legendColors} />
+        <Legend
+          data={data}
+          baseTemperatura={baseTemperatura}
+          colors={colors}
+          colorScale={colorScale}
+          minT={minT}
+          maxT={maxT}
+        />
       </svg>
       {tooltipIsActive && <Tooltip datosTooltip={datosTooltip} tooltipIsActive={tooltipIsActive} />}
     </main>
