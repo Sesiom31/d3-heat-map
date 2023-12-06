@@ -6,12 +6,12 @@ import Ejes from './Ejes';
 import Legend from './Legend';
 import Tooltip from './Tooltip';
 
-function Svg({ data, baseTemperatura }) {
+function Svg({ data, baseTemperatura }) {  
   const [tooltipIsActive, setTooltipIsActive] = useState(false);
   const [datosTooltip, setDatosTooltip] = useState({
     x: 0,
     y: 0,
-    year: 1000,
+    year: null,
     month: 'enero',
     temperatura: 0,
     variance: 0,
@@ -70,7 +70,7 @@ function Svg({ data, baseTemperatura }) {
       .on('mouseenter', (e, d) => {
         setTooltipIsActive(true);
         setDatosTooltip({
-          x: e.pageX - 50 - 72,
+          x: e.pageX - 50 -24,
           y: e.pageY - 175,
           year: d.year,
           month: d.month,
